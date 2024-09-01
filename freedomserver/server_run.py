@@ -3,7 +3,7 @@ import argparse
 from aiohttp.web import Application
 
 from freedomserver.server_routes import ServerRoutes
-
+from freedomserver.server_config import ServerConfig
 async def run(argv):
     parser = argparse.ArgumentParser(description="Freedom Server options")
 
@@ -16,9 +16,11 @@ async def run(argv):
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
+        
+    config: ServerConfig = ServerConfig(filename=options.config)
     
     app: Application = Application()
     
-    ServerRoutes.setup_routes(app)
+    ServerRoutes.setup_routes(app, config)
     
     return app

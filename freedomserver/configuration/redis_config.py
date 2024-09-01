@@ -6,4 +6,4 @@ class RedisConfig:
     
     host: str
     port: int = field(default=6379)
-    password: str
+    password: str = field(default="")

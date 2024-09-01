@@ -1,7 +1,6 @@
 from freedomlib.account.account import Account
 from freedomlib.account.account_info import AccountInfo
-from freedomserver.context.account.infra.create_account_request import CreateAccountRequest
-from freedomserver.context.account.infra.create_account_response import CreateAccountResponse
+from freedomserver.context.account.infra.create_account import CreateAccountRequest, CreateAccountResponse
 from freedomserver.context.account.account_routes import AccountRoutes
 from freedomserver.context.key.key_routes import KeyRoutes
 from freedomlib.key.key import Key
@@ -10,7 +9,7 @@ from aiohttp import web
 import pytest
 
 @pytest.fixture
-def fake_redis():
+def fake_redis() -> FakeRedis:
     # Cria uma conexão fake do Redis usando fakeredis
     return FakeRedis()
 

@@ -7,7 +7,7 @@ from freedomlib.account.account_manager import AccountManager
 from freedomlib.key.key_repository import KeyRepository
 from freedomlib.key.key_repository_impl import KeyRepositoryImpl
 from freedomlib.key.key_manager import KeyManager
-
+from freedomserver.context.account.account_service import AccountService
 from freedomserver.context.account.account_controller import AccountController
 
 class AccountRoutes:
@@ -20,7 +20,9 @@ class AccountRoutes:
         key_repository: KeyRepository = KeyRepositoryImpl(redis_connection)
         key_manager: KeyManager = KeyManager(key_repository)
         
-        account_controller: AccountController = AccountController(account_manager, key_manager)
+        account_service: AccountService = AccountService(account_manager, key_manager)
+        
+        account_controller: AccountController = AccountController(account_service)
         
         return [
             post('/account', account_controller.create_account),

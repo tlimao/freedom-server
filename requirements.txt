@@ -1,0 +1,8 @@
+aiohttp==3.10.5
+pyyaml==6.0.2
+redis==5.0.8
+cryptography==43.0.0
+pytest==8.3.2
+pytest-aiohttp==1.0.5
+fakeredis==2.24.0
+git+https://github.com/tlimao/freedom-lib.git@1.0.x

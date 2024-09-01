@@ -6,8 +6,6 @@ from freedomlib.key.error.key_not_found_error import KeyNotFoundError
 from freedomlib.key.key_manager import KeyManager
 from freedomlib.key.key import Key
 
-routes = web.RouteTableDef()
-
 class KeyController:
 
     def __init__(self, key_manager: KeyManager):

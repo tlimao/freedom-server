@@ -2,6 +2,7 @@ import logging
 
 from yaml import safe_load
 
+from freedomserver.context.server.server_keys import ServerKeys
 from freedomserver.configuration.redis_config import RedisConfig
 from freedomserver.configuration.server_info_config import ServerInfoConfig
 
@@ -9,11 +10,13 @@ logger = logging.getLogger(__name__)
 
 class ServerConfig:
     
-    def __init__(self, filename: str = None) -> None:
+    def __init__(self, server_keys: ServerKeys, filename: str = None) -> None:
         if (filename):
             self._load_from_file(filename)
         else:
             self._load_from_env()
+            
+        self._server_keys: ServerKeys = server_keys
 
     def _load_from_file(self, filename: str) -> None:
         try:
@@ -30,6 +33,9 @@ class ServerConfig:
     
     def get_server_info(self) -> ServerInfoConfig:
         return self._server_info
+
+    def get_server_keys(self) -> ServerKeys:
+        return self._server_keys
 
     def _load_from_env(self) -> None:
         ...

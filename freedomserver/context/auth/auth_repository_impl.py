@@ -33,9 +33,9 @@ class AuthRepositoryImpl(AuthRepository):
             value=token)
 
     def get_token(self, account_id: str, device_id: str) -> str:
-        token: bytes = self._redis_connection.get(f"{self.AUTH_DIRECTORY}:{account_id}:{device_id}")
+        token: str = self._redis_connection.get(f"{self.AUTH_DIRECTORY}:{account_id}:{device_id}")
         if token:
-            return token.decode("utf-8")
+            return token
         
         raise TokenNotFoundError("Token not found")
 

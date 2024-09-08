@@ -1,31 +1,27 @@
-from aiohttp import web
-from aiohttp.web_ws import WSMsgType
+from typing import List
+
 from freedomlib.message.message import Message
-from freedomserver.context.message.message_repository import MessageRepository
+from freedomlib.message.message_repository import MessageRepository
 
 class MessageService:
 
-    def __init__(self, message_repository: MessageRepository):
-        self._connected_clients = {}
-        self._message_repository = message_repository
+    MESSAGE_DIRECTORY: str = "chat:message"
+    EXPIRATION_TIME: int = 30 * 24 * 60 * 60
 
-    async def handle_messages(self, ws: web.WebSocketResponse, account_id: str, device_id: str):
-        async for msg in ws:
-            if msg.type == WSMsgType.TEXT:
-                message = Message.from_dict(msg.data)
-                self._logger.info(f"Mensagem recebida de {account_id}: {message}")
-                await self.process_message(account_id, device_id, message)
-            elif msg.type == WSMsgType.ERROR:
-                self._logger.error(f"Erro do cliente {account_id}: {ws.exception()}")
-                break
+    def __init__(self, message_repository: MessageRepository) -> None:
+        self._message_repository: MessageRepository = message_repository
 
-    async def process_message(self, sender_account_id: str, sender_device_id: str, message: Message):
-        recipient_id = message.recipient_id
-        if recipient_id in self._connected_clients:
-            await self.send_message(recipient_id, message)
-        else:
-            self._message_repository.store_message(recipient_id, message.to_dict())
+    def store_messages(self, messages: List[Message]) -> None:
+        self._message_repository.save_with_expiration(messages, self.EXPIRATION_TIME)
 
-    async def send_message(self, recipient_id: str, message: Message):
-        for device_id, ws in self._connected_clients[recipient_id].items():
-            await ws.send_str(message.to_json())
+    def get_messages(self, account_id: str, device_id: str) -> List[Message]:
+        return self._message_repository.get(account_id)
+
+    def clear_messages(self, account_id: str, message_id: str) -> None:
+        self._message_repository.delete(account_id, message_id)
+
+    def clear_account_messages(self, account_id: str, message_id: str) -> None:
+        self._message_repository.delete_for_me(account_id, message_id)
+
+    def update_message(self, message: Message) -> None:
+        self._message_repository.update(message)

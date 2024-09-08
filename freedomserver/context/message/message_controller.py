@@ -24,6 +24,9 @@ class MessageController:
         account_id, device_id = await self._authenticate(ws)
         if not account_id or not device_id:
             return ws
+        
+        
+        self._logger.info(f"Nível de log atual: {self._logger.getEffectiveLevel()}")
 
         self._logger.debug(f"Cliente conectado: {account_id} - {device_id}")
         

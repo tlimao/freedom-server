@@ -1,9 +1,8 @@
 import logging
 from aiohttp import web
 from http import HTTPStatus
-from freedomlib.account.error.account_not_created_error import AccountNotCreatedError
-from freedomlib.account.error.account_not_found_error import AccountNotFoundError
 from freedomlib.account.account import Account
+from freedomserver.context.account.errors.account_error import AccountNotCreatedError, AccountNotFoundError
 from freedomserver.context.account.infra.create_account import CreateAccountRequest
 from freedomserver.context.account.infra.create_account import CreateAccountResponse
 from freedomserver.context.account.account_service import AccountService
@@ -15,9 +14,9 @@ class AccountController:
 
     async def get_account(self, request: web.Request) -> web.Response:
         try:
-            account_id: str = request.match_info['account_id'] 
+            aci: str = request.match_info['aci'] 
             
-            account: Account = self._account_service.get_account(account_id)
+            account: Account = self._account_service.get_account(aci)
             
             return web.json_response(account.to_dict())
         except AccountNotFoundError as e:

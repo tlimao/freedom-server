@@ -9,5 +9,6 @@ class InfoRoutes:
         info_controller: InfoController = InfoController(server_info)
         
         return [
-            get('/info', info_controller.get_info)
+            get('/info', info_controller.get_info),
+            get('/pubkey', info_controller.get_pub_key)
         ]

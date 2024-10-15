@@ -26,5 +26,5 @@ class AccountRoutes:
         
         return [
             post('/account', account_controller.create_account),
-            get('/account/{account_id}', account_controller.get_account)
+            get('/account/{aci}', account_controller.get_account)
         ]

@@ -3,6 +3,10 @@ server_info:
   version: 0.0.1
   environment: local
 
+server_keys:
+  public_key:
+  private_key: 
+
 redis:
   host: localhost
   port: 6379

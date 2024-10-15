@@ -4,6 +4,7 @@ from yaml import safe_load
 
 from freedomserver.configuration.redis_config import RedisConfig
 from freedomserver.configuration.server_info_config import ServerInfoConfig
+from freedomserver.configuration.server_keys import ServerKeys
 
 logger = logging.getLogger(__name__)
 
@@ -22,14 +23,21 @@ class ServerConfig:
                 
                 self._redis_config: RedisConfig = RedisConfig(**config_dict.get("redis"))
                 self._server_info: ServerInfoConfig = ServerInfoConfig(**config_dict.get("server_info"))
+                self._server_keys: ServerKeys = ServerKeys(**config_dict.get("server_keys"))
         except Exception as e:
             logging.error(f"Can't load config from {filename}: {e}")
-            
-    def get_redis_config(self) -> RedisConfig:
+
+    @property
+    def redis_config(self) -> RedisConfig:
         return self._redis_config
     
-    def get_server_info(self) -> ServerInfoConfig:
+    @property
+    def server_info(self) -> ServerInfoConfig:
         return self._server_info
+
+    @property
+    def server_keys(self) -> ServerKeys:
+        return self._server_keys
 
     def _load_from_env(self) -> None:
         ...

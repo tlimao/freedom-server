@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # Caminho para o arquivo setup.py
-SETUP_FILE=".version"
+VERSION_FILE=".version"
 
 # Verifica se o arquivo setup.py existe
-if [[ ! -f "$SETUP_FILE" ]]; then
-    echo "Arquivo $SETUP_FILE não encontrado!"
+if [[ ! -f "$VERSION_FILE" ]]; then
+    echo "Arquivo $VERSION_FILE não encontrado!"
     exit 1
 fi
 
 # Lê a versão atual do setup.py
-VERSION=$(grep -oP "(?<=version=)[0-9]+\.[0-9]+\.[0-9]+" "$SETUP_FILE")
+VERSION=$(grep -oP "(?<=version=)[0-9]+\.[0-9]+\.[0-9]+" "$VERSION_FILE")
 if [[ -z "$VERSION" ]]; then
-    echo "Não foi possível encontrar a versão no $SETUP_FILE."
+    echo "Não foi possível encontrar a versão no $VERSION_FILE."
     exit 1
 fi
 
@@ -46,7 +46,7 @@ esac
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
 # Atualiza o arquivo setup.py
-sed -i "s/version=$VERSION/version=$NEW_VERSION/" "$SETUP_FILE"
+sed -i "s/version=$VERSION/version=$NEW_VERSION/" "$VERSION_FILE"
 
 echo "Versão atualizada de $VERSION para $NEW_VERSION"
 
@@ -63,7 +63,7 @@ else
 fi
 
 # Comita as mudanças
-git add "$SETUP_FILE"
+git add "$VERSION_FILE"
 git commit -m "Preparar release $NEW_VERSION"
 git push --set-upstream origin $BRANCH_NAME
 git checkout $BRANCH_NAME

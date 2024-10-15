@@ -10,7 +10,7 @@ if [[ ! -f "$SETUP_FILE" ]]; then
 fi
 
 # Lê a versão atual do setup.py
-VERSION=$(grep -oP "(?<=version=\')[0-9]+\.[0-9]+\.[0-9]+" "$SETUP_FILE")
+VERSION=$(grep -oP "(?<=version=)[0-9]+\.[0-9]+\.[0-9]+" "$SETUP_FILE")
 if [[ -z "$VERSION" ]]; then
     echo "Não foi possível encontrar a versão no $SETUP_FILE."
     exit 1
@@ -46,7 +46,7 @@ esac
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
 # Atualiza o arquivo setup.py
-sed -i "s/version='$VERSION'/version='$NEW_VERSION'/" "$SETUP_FILE"
+sed -i "s/version=$VERSION/version=$NEW_VERSION/" "$SETUP_FILE"
 
 echo "Versão atualizada de $VERSION para $NEW_VERSION"
 
@@ -66,4 +66,4 @@ fi
 git add "$SETUP_FILE"
 git commit -m "Preparar release $NEW_VERSION"
 git push --set-upstream origin $BRANCH_NAME
-git check $BRANCH_NAME
+git checkout $BRANCH_NAME

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Caminho para o arquivo setup.py
-SETUP_FILE="setup.py"
+VERSION_FILE=".version"
 
 # Função para incrementar a versão
 increment_version() {
@@ -36,10 +36,10 @@ increment_version() {
 }
 
 # Obtém a versão atual do setup.py (assume que a linha da versão tem o formato: version='x.y.z')
-current_version=$(grep -Po "(?<=version=')[0-9]+\.[0-9]+\.[0-9]+(?=')" $SETUP_FILE)
+current_version=$(grep -oP "(?<=version=)[0-9]+\.[0-9]+\.[0-9]+" "$SETUP_FILE")
 
 if [ -z "$current_version" ]; then
-    echo "Erro: Não foi possível encontrar a versão no arquivo $SETUP_FILE"
+    echo "Erro: Não foi possível encontrar a versão no arquivo $VERSION_FILE"
     exit 1
 fi
 
@@ -56,7 +56,7 @@ fi
 new_version=$(increment_version "$current_version" "$increment_type")
 
 # Atualiza o arquivo setup.py com a nova versão
-sed -i "s/version='$current_version'/version='$new_version'/g" $SETUP_FILE
+sed -i "s/version=$current_version/version=$new_version/g" $VERSION_FILE
 
 # Mostra a nova versão
 echo "Nova versão: $new_version"
@@ -79,7 +79,7 @@ else
 fi
 
 # Faz o commit automático com Git
-git add $SETUP_FILE
+git add $VERSION_FILE
 git commit -m "Atualiza versão: $current_version -> $new_version"
 
 # Faz o push para a branch

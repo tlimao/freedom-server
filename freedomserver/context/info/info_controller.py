@@ -13,5 +13,5 @@ class InfoController:
 
     async def get_pub_key(self, request: Request) -> Response:
         return json_response({
-            "serve_public_key": self._server_keys.public_key()
+            "serve_public_key": self._server_keys.public_key
         })

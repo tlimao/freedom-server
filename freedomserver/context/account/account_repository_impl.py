@@ -31,7 +31,7 @@ class AccountRepositoryImpl(AccountRepository):
         
         return account
     
-    def get_by_aci(self, aci: str) -> Account:
+    def get_by_aci(self, aci: str) -> Account | None:
         key: str = f"{self.ACCOUNT_DIRECTORY}:{aci}"
         account_data: str = self._redis_connection.get(key)
         
@@ -41,21 +41,27 @@ class AccountRepositoryImpl(AccountRepository):
             return account
         
         else:
-            raise AccountNotFoundError()
+            return None
 
-    def get_by_email(self, email: str) -> Account:
+    def get_by_email(self, email: str) -> Account | None:
         key: str = f"{self.ACCOUNT_EMAIL_DIRECOTRY}:{email}"
         
-        aci: str = json.loads(self._redis_connection.get(key))
+        aci: bytes = self._redis_connection.get(key)
         
-        return self.get_by_aci(aci)
+        if aci:
+            return self.get_by_aci(aci.decode())
+        else:
+            return None
 
-    def get_by_phonenumber(self, phonenumber: str) -> Account:
-        key: str = f"{self.ACCOUNT_EMAIL_DIRECOTRY}:{phonenumber}"
+    def get_by_phonenumber(self, phonenumber: str) -> Account | None:
+        key: str = f"{self.ACCOUNT_E164_DIRECOTRY}:{phonenumber}"
         
-        aci: str = json.loads(self._redis_connection.get(key))
+        aci: bytes = self._redis_connection.get(key)
         
-        return self.get_by_aci(aci)
+        if aci:
+            return self.get_by_aci(aci.decode())
+        else:
+            return None
 
     def update(self, account: Account) -> Account:
         key: str = f"{self.ACCOUNT_DIRECTORY}:{account.aci}"

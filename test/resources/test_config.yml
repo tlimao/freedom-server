@@ -1,7 +1,7 @@
 server_info:
   name: freedom-server
   version: 0.0.1
-  environment: local
+  environment: test
 
 server_keys:
   public_key: |

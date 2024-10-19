@@ -1,30 +1,31 @@
 from redis import Redis
-from aiohttp.web import RouteDef, get, post
+from aiohttp.web import RouteDef, get, post, put
 
 from freedomlib.account.account_repository import AccountRepository
-from freedomlib.account.account_repository_impl import AccountRepositoryImpl
-from freedomlib.account.account_manager import AccountManager
-from freedomlib.key.key_repository import KeyRepository
-from freedomlib.key.key_repository_impl import KeyRepositoryImpl
-from freedomlib.key.key_manager import KeyManager
+from freedomserver.context.account.account_repository_impl import AccountRepositoryImpl
 from freedomserver.context.account.account_service import AccountService
 from freedomserver.context.account.account_controller import AccountController
+from freedomserver.context.utils.mail_sender import MailSender
 
 class AccountRoutes:
     
     @classmethod
-    def create(cls, redis_connection: Redis) -> list[RouteDef]:
+    def create(cls, mail_sender: MailSender, redis_connection: Redis) -> list[RouteDef]:
         account_repository: AccountRepository = AccountRepositoryImpl(redis_connection)
-        account_manager: AccountManager = AccountManager(account_repository)
-        
-        key_repository: KeyRepository = KeyRepositoryImpl(redis_connection)
-        key_manager: KeyManager = KeyManager(key_repository)
-        
-        account_service: AccountService = AccountService(account_manager, key_manager)
+
+        account_service: AccountService = AccountService(
+            account_repository=account_repository,
+            mail_sender=mail_sender,
+        )
         
         account_controller: AccountController = AccountController(account_service)
         
         return [
-            post('/account', account_controller.create_account),
-            get('/account/{aci}', account_controller.get_account)
+            post('/account/register', account_controller.register),
+            post('/account/verify', account_controller.verify),
+            post('/account', account_controller.create),
+            get('/account/{aci}', account_controller.get_account),
+            get('/account/profile', account_controller.profile),
+            put('/account/profile', account_controller.update_profile),
+            put('/account/privacy', account_controller.update_privacy)
         ]

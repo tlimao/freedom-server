@@ -5,6 +5,7 @@ from yaml import safe_load
 from freedomserver.configuration.redis_config import RedisConfig
 from freedomserver.configuration.server_info_config import ServerInfoConfig
 from freedomserver.configuration.server_keys import ServerKeys
+from freedomserver.configuration.smtp_config import SmtpConfig
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +25,7 @@ class ServerConfig:
                 self._redis_config: RedisConfig = RedisConfig(**config_dict.get("redis"))
                 self._server_info: ServerInfoConfig = ServerInfoConfig(**config_dict.get("server_info"))
                 self._server_keys: ServerKeys = ServerKeys(**config_dict.get("server_keys"))
+                self._smtp_config: SmtpConfig = SmtpConfig(**config_dict.get("smtp"))
         except Exception as e:
             logging.error(f"Can't load config from {filename}: {e}")
 
@@ -38,6 +40,10 @@ class ServerConfig:
     @property
     def server_keys(self) -> ServerKeys:
         return self._server_keys
+    
+    @property
+    def smtp_config(self) -> SmtpConfig:
+        return self._smtp_config
 
     def _load_from_env(self) -> None:
         ...

@@ -1,21 +1,18 @@
-from redis import Redis
-from aiohttp.web import RouteDef, get, put
+from aiohttp.web import RouteDef, get
 
 from freedomlib.key.key_repository import KeyRepository
-from freedomlib.key.key_repository_impl import KeyRepositoryImpl
-from freedomlib.key.key_manager import KeyManager
 
+from freedomserver.context.key.key_service import KeyService
 from freedomserver.context.key.key_controller import KeyController
 
 class KeyRoutes:
     
     @classmethod
-    def create(cls, redis_connection: Redis) -> list[RouteDef]:
-        key_repository: KeyRepository = KeyRepositoryImpl(redis_connection)
-        key_manager: KeyManager = KeyManager(key_repository)
+    def create(cls, key_repository: KeyRepository) -> list[RouteDef]:
+        key_service: KeyService = KeyService(key_repository)
         
-        key_controller: KeyController = KeyController(key_manager)
+        key_controller: KeyController = KeyController(key_service)
         
         return [
-            get('/key/{account_id}', key_controller.get_account_key)
+            get('/key/{aci}', key_controller.get_key)
         ]

@@ -2,20 +2,21 @@ import logging
 from aiohttp import web
 from http import HTTPStatus
 
-from freedomlib.key.error.key_not_found_error import KeyNotFoundError
-from freedomlib.key.key_manager import KeyManager
 from freedomlib.key.key import Key
+
+from freedomserver.context.key.errors.key_error import KeyNotFoundError
+from freedomserver.context.key.key_service import KeyService
 
 class KeyController:
 
-    def __init__(self, key_manager: KeyManager):
-        self._key_manager: KeyManager = key_manager
+    def __init__(self, key_service: KeyService):
+        self._key_service: KeyService = key_service
 
-    async def get_account_key(self, request: web.Request) -> web.Response:
+    async def get_key(self, request: web.Request) -> web.Response:
         try:
-            account_id: str = request.match_info['account_id'] 
+            aci: str = request.match_info['aci'] 
             
-            key: Key = self._key_manager.get_account_key(account_id)
+            key: Key = self._key_service.get_key(aci)
             
             return web.json_response(key.to_dict())
         except KeyNotFoundError as e:

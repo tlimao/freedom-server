@@ -8,6 +8,7 @@ class AuthRepositoryImpl(AuthRepository):
     AUTH_DIRECTORY: str = "chat:auth"
     CHALLENGE_EXPIRATION_TIME: int = 300
     AUTH_TOKEN_EXPIRATION_TIME: int = 3600
+
     def __init__(self, redis_connection: Redis):
         self._redis_connection = redis_connection
 

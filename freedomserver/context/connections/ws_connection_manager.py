@@ -1,11 +1,16 @@
-from abc import ABC
-from dataclasses import dataclass
 
+from aiohttp import web
 
-@dataclass
-class WsConnectionManager(ABC):
+class WsConnectionManager:
     
     def __init__(self) -> None:
-        self._connections: dict = {}
+        self._connected_clients: dict[str, dict[str, web.WebSocketResponse]] = {}
 
-    def get_ws(self, account_id: str, device_id: str) -> None:
+    def add_client(self, account_id: str, device_id: str, ws: web.WebSocketResponse):
+        self._connected_clients.setdefault(account_id, {})[device_id] = ws
+
+    def remove_client(self, account_id: str, device_id: str):
+        if account_id in self._connected_clients:
+            self._connected_clients[account_id].pop(device_id, None)
+            if not self._connected_clients[account_id]:
+                del self._connected_clients[account_id]

@@ -3,19 +3,17 @@ import json
 import logging
 from aiohttp import WSMsgType, web
 from http import HTTPStatus
+from freedomserver.context.connections.ws_connection_manager import WsConnectionManager
 from freedomserver.context.message.message_service import MessageService
-from freedomlib.message.message_manager import MessageManager
 from freedomserver.context.auth.auth_service import AuthService
 routes = web.RouteTableDef()
 
 class MessageController:
 
-    def __init__(self, message_manager: MessageManager, auth_service: AuthService):
-        self._message_manager: MessageManager = message_manager
-        self._auth_service: AuthService = auth_service
-        self._connected_clients: dict[str, dict[str, web.WebSocketResponse]] = {}
+    def __init__(self, message_service: MessageService):
+        self._message_service: MessageService = message_service
+        self._connection_manager: WsConnectionManager = WsConnectionManager()
         self._logger = logging.getLogger(__name__)
-        self._message_service = MessageService()
 
     async def message_handler(self, request: web.Request) -> web.WebSocketResponse:
         ws = web.WebSocketResponse()
@@ -25,15 +23,15 @@ class MessageController:
         if not account_id or not device_id:
             return ws
 
-        self._logger.info(f"Cliente conectado: {account_id} - {device_id}")
+        self._logger.info(f"Client connected: {account_id} - {device_id}")
         
-        self._add_client(account_id, device_id, ws)
+        self._connection_manager.add_client(account_id, device_id, ws)
         
         try:
             await self._message_service.handle_messages(ws, account_id, device_id)
         finally:
-            self._remove_client(account_id, device_id)
-            self._logger.info(f"Cliente desconectado: {account_id} - {device_id}")
+            self._connection_manager.remove_client(account_id, device_id)
+            self._logger.info(f"Client disconnected: {account_id} - {device_id}")
         
         return ws
     
@@ -68,12 +66,3 @@ class MessageController:
 
     def _validate_token(self, account_id: str, device_id: str, token: str) -> bool:
         return self._auth_service.verify_token(account_id, device_id, token)
-
-    def _add_client(self, account_id: str, device_id: str, ws: web.WebSocketResponse):
-        self._connected_clients.setdefault(account_id, {})[device_id] = ws
-
-    def _remove_client(self, account_id: str, device_id: str):
-        if account_id in self._connected_clients:
-            self._connected_clients[account_id].pop(device_id, None)
-            if not self._connected_clients[account_id]:
-                del self._connected_clients[account_id]

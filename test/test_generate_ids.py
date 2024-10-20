@@ -11,7 +11,6 @@ def test_generate_uuid7_str() -> None:
 def test_is_uuid7_valid() -> None:
     uuid7: str = generate_uuid7_str()
     
-    print(uuid7)
     assert isinstance(uuid6.UUID(hex=uuid7), uuid6.UUID)
 
 def text_generate_number_id_str() -> None:

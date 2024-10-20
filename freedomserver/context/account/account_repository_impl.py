@@ -21,9 +21,9 @@ class AccountRepositoryImpl(AccountRepository):
         
         self._redis_connection.set(key, json.dumps(account.to_dict()))
         
-        key_email: str = f"{self.ACCOUNT_EMAIL_DIRECOTRY}:{account.email}"
+        # key_email: str = f"{self.ACCOUNT_EMAIL_DIRECOTRY}:{account.email}"
         
-        self._redis_connection.set(key_email, account.aci)
+        # self._redis_connection.set(key_email, account.aci)
         
         key_e164: str = f"{self.ACCOUNT_E164_DIRECOTRY}:{account.phonenumber}"
         

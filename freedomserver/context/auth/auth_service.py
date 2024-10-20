@@ -1,5 +1,5 @@
 from freedomserver.context.auth.auth_repository import AuthRepository
-from freedomlib.key.key_manager import KeyManager
+from freedomlib.key.key_repository import KeyRepository
 from freedomlib.key.key import Key
 from freedomserver.context.auth.error.challenge_signature_not_valid_error import ChallengeSignatureNotValidError
 from freedomserver.context.auth.error.token_not_found_error import TokenNotFoundError
@@ -9,20 +9,17 @@ import secrets
 
 class AuthService:
     
-    def __init__(self, auth_repository: AuthRepository, key_manager: KeyManager):
+    def __init__(self, auth_repository: AuthRepository, key_repository: KeyRepository):
         self._auth_repository: AuthRepository = auth_repository
-        self._key_manager: KeyManager = key_manager
-
-    def register_device(self, account_id: str, public_key: str, device_id: str) -> str:
-        return self._auth_repository.register_device(account_id, public_key, device_id)
+        self._key_repository: KeyRepository = key_repository
 
     def store_challenge(self, account_id: str, device_id: str, challenge: str) -> None:
         self._auth_repository.store_challenge(account_id, device_id, challenge)
 
     def verify_challenge(self, account_id: str, device_id: str, signed_challenge: str) -> str:
-        key: Key = self._key_manager.get_account_key(account_id)
+        key: Key = self._key_repository.get_key_by_aci(account_id)
         
-        self._verify_challenge_signature(key, account_id, device_id, signed_challenge)
+        # self._verify_challenge_signature(key, account_id, device_id, signed_challenge)
         
         token: str = secrets.token_urlsafe(32)
         self._auth_repository.store_token(account_id, device_id, token)

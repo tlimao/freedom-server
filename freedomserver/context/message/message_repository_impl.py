@@ -38,3 +38,6 @@ class MessageRepositoryImpl(MessageRepository):
     def delete_messages(self, recipient_id: str) -> None:
         # Não é necessário implementar esta função para uma fila
         pass
+
+    def delete_message(self, recipient_id: str, message_id: str) -> None:
+        return super().delete_message(recipient_id, message_id)

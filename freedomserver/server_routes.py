@@ -44,16 +44,24 @@ class ServerRoutes:
         message_repository: MessageRepository = MessageRepositoryImpl(redis_connection)
         
         app.add_routes(AccountRoutes.create(
-            account_repository=account_repository,
-            account_cache=account_cache,
-            key_repository=key_repository,
-            mail_sender=mail_sender))
-        app.add_routes(KeyRoutes.create(key_repository=key_repository))
-        app.add_routes(InfoRoutes.create(config.server_info, config.server_keys))
+            account_repository,
+            account_cache,
+            key_repository,
+            mail_sender))
+        app.add_routes(KeyRoutes.create(
+            key_repository))
+        app.add_routes(InfoRoutes.create(
+            config.server_info,
+            config.server_keys))
         app.add_routes(ContactRoutes.create(
-            account_repository=account_repository,
-            key_repository=key_repository))
-        app.add_routes(MessageRoutes.create(message_repository))
-        app.add_routes(AuthRoutes.create(auth_repository, key_repository))
+            account_repository,
+            key_repository))
+        app.add_routes(MessageRoutes.create(
+            message_repository,
+            auth_repository,
+            key_repository))
+        app.add_routes(AuthRoutes.create(
+            auth_repository,
+            key_repository))
         
         

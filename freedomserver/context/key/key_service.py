@@ -18,7 +18,7 @@ class KeyService:
             key: Key = Key(
                 id=generate_uuid7_str(),
                 aci=key_data.aci,
-                pub_key=key_data.pub_key
+                ed25519_pub_key=key_data.ed25519_pub_key
             )
 
             self._key_repository.save(key)

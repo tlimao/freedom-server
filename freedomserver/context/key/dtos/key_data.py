@@ -5,4 +5,4 @@ from dataclasses import dataclass
 class KeyData:
     
     aci: str
-    pub_key: str
+    ed25519_pub_key: str

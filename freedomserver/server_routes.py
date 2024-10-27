@@ -5,6 +5,7 @@ from aiohttp.web import Application
 from freedomlib.account.account_repository import AccountRepository
 from freedomlib.key.key_repository import KeyRepository
 
+from freedomserver.configuration.server_keys import ServerKeys
 from freedomserver.context.account.account_cache import AccountCache
 from freedomserver.context.account.account_repository_impl import AccountRepositoryImpl
 from freedomserver.context.account.account_routes import AccountRoutes
@@ -24,6 +25,8 @@ class ServerRoutes:
     
     @classmethod
     def setup_routes(cls, app: Application, config: ServerConfig) -> None:
+        server_keys: ServerKeys = config.server_keys
+        
         redis_connection: redis.Redis = redis.Redis(
             host=config.redis_config.host,
             port=config.redis_config.port
@@ -61,6 +64,7 @@ class ServerRoutes:
             auth_repository,
             key_repository))
         app.add_routes(AuthRoutes.create(
+            server_keys,
             auth_repository,
             key_repository))
         

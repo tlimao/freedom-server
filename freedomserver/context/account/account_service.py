@@ -123,7 +123,7 @@ class AccountService:
             key: Key = Key(
                 id=generate_uuid7_str(),
                 aci=account.aci,
-                pub_key=account_info.pub_key
+                ed25519_pub_key=account_info.ed25519_pub_key
             )
             
             self._key_repository.save(key)
@@ -137,7 +137,7 @@ class AccountService:
                 nick=account.nick,
                 email=account.email,
                 phonenumber=account.phonenumber,
-                pub_key=account_info.pub_key,
+                ed25519_pub_key=account_info.ed25519_pub_key,
                 discoverable=account.discoverable,
                 pin_hash=account.pin_hash,
             )

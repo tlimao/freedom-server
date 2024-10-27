@@ -21,10 +21,6 @@ class AccountRepositoryImpl(AccountRepository):
         
         self._redis_connection.set(key, json.dumps(account.to_dict()))
         
-        # key_email: str = f"{self.ACCOUNT_EMAIL_DIRECOTRY}:{account.email}"
-        
-        # self._redis_connection.set(key_email, account.aci)
-        
         key_e164: str = f"{self.ACCOUNT_E164_DIRECOTRY}:{account.phonenumber}"
         
         self._redis_connection.set(key_e164, account.aci)
@@ -44,14 +40,7 @@ class AccountRepositoryImpl(AccountRepository):
             return None
 
     def get_by_email(self, email: str) -> Account | None:
-        key: str = f"{self.ACCOUNT_EMAIL_DIRECOTRY}:{email}"
-        
-        aci: bytes = self._redis_connection.get(key)
-        
-        if aci:
-            return self.get_by_aci(aci.decode())
-        else:
-            return None
+        raise NotImplementedError()
 
     def get_by_phonenumber(self, phonenumber: str) -> Account | None:
         key: str = f"{self.ACCOUNT_E164_DIRECOTRY}:{phonenumber}"
@@ -76,11 +65,7 @@ class AccountRepositoryImpl(AccountRepository):
         key: str = f"{self.ACCOUNT_DIRECTORY}:{account.aci}"
         
         self._redis_connection.delete(key)
-        
-        key_email: str = f"{self.ACCOUNT_EMAIL_DIRECOTRY}:{account.email}"
-        
-        self._redis_connection.delete(key_email)
-        
+               
         key_e164: str = f"{self.ACCOUNT_E164_DIRECOTRY}:{account.phonenumber}"
         
         self._redis_connection.delete(key_e164)

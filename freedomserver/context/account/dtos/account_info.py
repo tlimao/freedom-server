@@ -7,6 +7,6 @@ class AccountInfo:
     nick: str
     email: str
     phonenumber: str
-    pub_key: str
+    ed25519_pub_key: str
     discoverable: bool = True
     pin_hash: str = None

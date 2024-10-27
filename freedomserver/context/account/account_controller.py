@@ -15,7 +15,6 @@ from freedomserver.context.account.dtos.update_profile_response import UpdatePro
 from freedomserver.context.account.dtos.verification_request import VerificationRequest
 from freedomserver.context.account.dtos.verification_response import VerificationResponse
 from freedomserver.context.account.errors.account_error import AccountNotCreatedError, AccountNotFoundError, AccountRegistrationError, AccountUpdateError, AccountVerificationError
-from freedomserver.context.key.key_service import KeyService
 
 class AccountController:
 

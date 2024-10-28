@@ -36,7 +36,7 @@ increment_version() {
 }
 
 # Obtém a versão atual do setup.py (assume que a linha da versão tem o formato: version='x.y.z')
-current_version=$(grep -oP "(?<=version=)[0-9]+\.[0-9]+\.[0-9]+" "$SETUP_FILE")
+current_version=$(grep -oP "(?<=version=)[0-9]+\.[0-9]+\.[0-9]+" "$VERSION_FILE")
 
 if [ -z "$current_version" ]; then
     echo "Erro: Não foi possível encontrar a versão no arquivo $VERSION_FILE"

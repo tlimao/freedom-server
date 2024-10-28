@@ -15,8 +15,8 @@ class KeyService:
             key_box: KeyBox = KeyBox(
                 id=generate_uuid7_str(),
                 aci=key_data.aci,
-                ed25519_pub_key=key_data.ed25519_pub_key,
-                x25519_pub_key=key_data.x25519_pub_key
+                ed25519_public_key=key_data.ed25519_public_key,
+                x25519_public_key=key_data.x25519_public_key
             )
 
             self._key_repository.save(key_box)

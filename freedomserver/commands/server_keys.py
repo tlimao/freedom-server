@@ -1,20 +1,9 @@
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
-from cryptography.hazmat.primitives import serialization
+from freedomlib.crypto.functions import ED25519
 
 def generate_server_keys() -> None:
-    private_key: Ed25519PrivateKey = Ed25519PrivateKey.generate()
-    public_key: Ed25519PublicKey = private_key.public_key()
-
-    private_key_pem: str = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.NoEncryption()
-    ).decode('utf-8')
-
-    public_key_pem: str = public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    ).decode('utf-8')
+    private_key, public_key = ED25519.create_key_pair()
+    private_key_pem: str = ED25519.private_key_to_pem(private_key)
+    public_key_pem: str = ED25519.public_key_to_pem(public_key)
 
     print("="*93)
     print("="*40 + " SERVER KEYS " + "="*40)

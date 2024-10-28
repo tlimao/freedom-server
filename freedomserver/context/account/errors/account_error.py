@@ -13,13 +13,11 @@ class AccountNotCreatedError(AccountError):
 class AccountRegistrationError(AccountError):
 
     def __init__(self, message: str = "Account Registration Failed") -> None:
-        super().__init__(message)
-        
+        super().__init__(message)   
 class AccountVerificationError(AccountError):
 
     def __init__(self, message: str = "Account Verification Failed") -> None:
         super().__init__(message)
-        
 class AccountUpdateError(AccountError):
     
     def __init__(self, message: str = "Account not Updated") -> None:

@@ -1,11 +1,12 @@
 from typing import List
-from freedomlib.contact.contact import Contact
-from freedomlib.account.account_repository import AccountRepository
-from freedomlib.account.account import Account
-from freedomlib.key.key import Key
-from freedomlib.key.key_repository import KeyRepository
 
+from freedomlib.contact.contact import Contact
+from freedomlib.account.account import Account
+from freedomlib.key.key_box import KeyBox
+
+from freedomserver.context.account.repository.account_repository import AccountRepository
 from freedomserver.context.contact.errors.contact_error import ContactNotFoundError
+from freedomserver.context.key.repository.key_repository import KeyRepository
 
 class ContactService:
     
@@ -32,18 +33,16 @@ class ContactService:
             if not account:
                 raise ContactNotFoundError("Phonenumber not found")
             
-            key: Key = self._key_repository.get_key_by_aci(account.aci)
+            key_box: KeyBox = self._key_repository.get_key_by_aci(account.aci)
             
-            if not key:
+            if not key_box:
                 raise ContactNotFoundError("Pub Key not found")
         
             return Contact(
                 aci=account.aci,
                 nick=account.nick,
                 email=account.email,
-                phonenumber=account.phonenumber,
-                discoverable=account.discoverable,
-                pub_key=key.pub_key,
+                phonenumber=account.phonenumber
             )
         
         except Exception as e:

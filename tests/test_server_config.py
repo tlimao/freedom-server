@@ -2,7 +2,7 @@ from yaml import safe_load
 from freedomserver.server_config import ServerConfig
 
 
-CONFIG_FILENAME: str = "./test/resources/test_config.yml"
+CONFIG_FILENAME: str = "./tests/resources/test_config.yml"
 
 def test_load_config_file() -> None:
     with open(CONFIG_FILENAME) as f:

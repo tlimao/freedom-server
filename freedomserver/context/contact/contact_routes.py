@@ -1,9 +1,9 @@
 from aiohttp.web import RouteDef, get, post
 
+from freedomserver.context.account.repository.account_repository import AccountRepository
 from freedomserver.context.contact.contact_controller import ContactController
 from freedomserver.context.contact.contact_service import ContactService
-from freedomlib.account.account_repository import AccountRepository
-from freedomlib.key.key_repository import KeyRepository
+from freedomserver.context.key.repository.key_repository import KeyRepository
 
 class ContactRoutes:
     

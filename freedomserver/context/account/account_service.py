@@ -2,9 +2,7 @@ import json
 import logging
 
 from freedomlib.account.account import Account
-from freedomlib.account.account_repository import AccountRepository
-from freedomlib.key.key import Key
-from freedomlib.key.key_repository import KeyRepository
+from freedomlib.key.key_box import KeyBox
 
 from freedomserver.context.account.account_cache import AccountCache
 from freedomserver.context.account.dtos.account_data import AccountData
@@ -13,6 +11,8 @@ from freedomserver.context.account.dtos.account_profile import AccountProfile
 from freedomserver.context.account.dtos.account_registration import AccountRegistration
 from freedomserver.context.account.dtos.account_verification import AccountVerification
 from freedomserver.context.account.errors.account_error import AccountNotCreatedError, AccountRegistrationError, AccountUpdateError, AccountVerificationError, AccountNotFoundError
+from freedomserver.context.account.repository.account_repository import AccountRepository
+from freedomserver.context.key.repository.key_repository import KeyRepository
 from freedomserver.context.utils.generate_ids import generate_number_id_str, generate_uuid7_str, generate_verification_code
 from freedomserver.context.utils.mail_sender import MailSender
 
@@ -69,17 +69,17 @@ class AccountService:
             if verification_code != registration_data.get("verification_code"):
                 raise AccountVerificationError("Verification code invalid!")
 
-            verification_id: str = generate_number_id_str()
+            request_id: str = generate_number_id_str()
 
             self._account_cache.set(
                 f"account:verification:{phonenumber}",
                 json.dumps({
-                    "request_id": verification_id,
+                    "request_id": request_id,
                     "account_lock": registration_data.get("account_lock")
                 }))
 
             return AccountVerification(
-                verification_id=verification_id,
+                request_id=request_id,
                 account_lock=registration_data.get("account_lock"))
             
         except Exception as e:
@@ -87,7 +87,7 @@ class AccountService:
 
     def create_account(self, request_id: str, account_info: AccountInfo) -> AccountData:
         try:
-            old_key: Key = None
+            key_box_old: KeyBox = None
             
             verification_data: dict = self._account_cache.get(f"account:verification:{account_info.phonenumber}")
             
@@ -103,7 +103,7 @@ class AccountService:
                 if account_info.pin_hash != account.pin_hash:
                     raise AccountNotCreatedError("Incorrect PIN!")
                 
-                old_key: Key = self._key_repository.get_key_by_aci(account.aci)
+                key_box_old: KeyBox = self._key_repository.get_key_by_aci(account.aci)
             
             else:
                 account: Account = Account(
@@ -117,17 +117,17 @@ class AccountService:
             
             self._account_repository.save(account)
             
-            if old_key:
-                self._key_repository.delete(old_key.id)
+            if key_box_old:
+                self._key_repository.delete(key_box_old.id)
 
-            key: Key = Key(
+            key_box_new: KeyBox = KeyBox(
                 id=generate_uuid7_str(),
                 aci=account.aci,
-                ed25519_pub_key=account_info.ed25519_pub_key
+                ed25519_public_key=account_info.ed25519_public_key,
+                x25519_public_key=account_info.x25519_public_key
             )
             
-            self._key_repository.save(key)
-            
+            self._key_repository.save(key_box_new)
             
             self._account_cache.delete(f"account:verification:{account_info.phonenumber}")
             self._account_cache.delete(f"account:registration:{account_info.phonenumber}")
@@ -137,7 +137,8 @@ class AccountService:
                 nick=account.nick,
                 email=account.email,
                 phonenumber=account.phonenumber,
-                ed25519_pub_key=account_info.ed25519_pub_key,
+                ed25519_public_key=account_info.ed25519_public_key,
+                x25519_public_key=account_info.x25519_public_key,
                 discoverable=account.discoverable,
                 pin_hash=account.pin_hash,
             )

@@ -13,7 +13,7 @@ from freedomserver.context.auth.auth_repository import AuthRepository
 from freedomserver.context.auth.auth_repository_impl import AuthRepositoryImpl
 from freedomserver.context.auth.auth_routes import AuthRoutes
 from freedomserver.context.contact.contact_routes import ContactRoutes
-from freedomserver.context.key.key_repository_impl import KeyRepositoryImpl
+from freedomserver.context.key.repository.key_repository_impl import KeyRepositoryImpl
 from freedomserver.context.key.key_routes import KeyRoutes
 from freedomserver.context.message.message_repository import MessageRepository
 from freedomserver.context.message.message_repository_impl import MessageRepositoryImpl

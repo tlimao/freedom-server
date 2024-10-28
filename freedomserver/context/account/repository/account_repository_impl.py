@@ -1,8 +1,8 @@
 import json
 from freedomlib.account.account import Account
-from freedomlib.account.account_repository import AccountRepository
 from redis import Redis
 
+from freedomserver.context.account.repository.account_repository import AccountRepository
 from freedomserver.context.account.errors.account_error import AccountNotFoundError
 
 

@@ -1,7 +1,6 @@
 from aiohttp.web import RouteDef, get
 
-from freedomlib.key.key_repository import KeyRepository
-
+from freedomserver.context.key.repository.key_repository import KeyRepository
 from freedomserver.context.key.key_service import KeyService
 from freedomserver.context.key.key_controller import KeyController
 

@@ -1,10 +1,10 @@
 from aiohttp.web import RouteDef, get, post, put
 
-from freedomlib.account.account_repository import AccountRepository
-from freedomlib.key.key_repository import KeyRepository
 from freedomserver.context.account.account_cache import AccountCache
 from freedomserver.context.account.account_service import AccountService
 from freedomserver.context.account.account_controller import AccountController
+from freedomserver.context.account.repository.account_repository import AccountRepository
+from freedomserver.context.key.repository.key_repository import KeyRepository
 from freedomserver.context.utils.mail_sender import MailSender
 
 class AccountRoutes:

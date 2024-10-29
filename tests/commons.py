@@ -15,8 +15,10 @@ MORTY_EMAIL: str = "morty@freedom.mail"
 RICKY_SANCHEZ_PIN_HASH: str = "iamafakerickysanchezdigest"
 MORTY_PIN_HASH: str = "iamtruemortydigest" 
 
-ED25519_KEY: str = "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAvpD/RP1BKRukhpic4tA13HQNpXIOU3GP/gfEYbxQMxU=\n-----END PUBLIC KEY-----"
-X25519_KEY: str = "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VuAyEAwzhbusC7X9aNcLHacoVMykmgjR2161SL+r195wAyqWc=\n-----END PUBLIC KEY-----"
+ED25519_PUBLIC_KEY: str = "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA+7HCNQc9INV1bxdf40+zuprCjA6KlpHr/hlN0S2BdT0=\n-----END PUBLIC KEY-----"
+ED25519_PRIVATE_KEY: str = "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEILdorxBzj9e6DK7n3wMvqo9r/NjbmB4K/kkJlOUOTyap\n-----END PRIVATE KEY-----"
+
+X25519_PUBLIC_KEY: str = "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VuAyEAwzhbusC7X9aNcLHacoVMykmgjR2161SL+r195wAyqWc=\n-----END PUBLIC KEY-----"
 
 SMTP_CONFIG: SmtpConfig = SmtpConfig(
     host="test_host",
@@ -24,3 +26,7 @@ SMTP_CONFIG: SmtpConfig = SmtpConfig(
     user="test_user",
     password="test_password"
 )
+
+SERVER_PUBLIC_KEY: str = "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAoVQWbQbvR1XyCvxxyCPeuVVNGX+3An/HRKJNrzHXblM=\n-----END PUBLIC KEY-----"
+
+SERVER_PRIVATE_KEY: str = "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJGX+J198uswHpxK8Cz6e4HEx26UxeOcm3oaHpKmn/bQ\n-----END PRIVATE KEY-----"

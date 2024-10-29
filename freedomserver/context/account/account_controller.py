@@ -52,7 +52,7 @@ class AccountController:
             )
             
             verification_response: VerificationResponse = VerificationResponse(
-                verification_id=account_verification.verification_id,
+                request_id=account_verification.request_id,
                 account_lock=account_verification.account_lock
             )
             

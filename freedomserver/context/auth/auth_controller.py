@@ -1,5 +1,6 @@
 import logging
 from aiohttp import web
+
 from freedomserver.context.auth.auth_service import AuthService
 from freedomserver.context.auth.dtos.auth_challenge_request import AuthChallengeRequest
 from freedomserver.context.auth.dtos.auth_challenge import AuthChallenge
@@ -22,7 +23,7 @@ class AuthController:
                 auth_challenge_request.device_id
             )
             
-            auth_challenge_response: AuthChallengeResponse = AuthChallengeResponse(**auth_challenge)
+            auth_challenge_response: AuthChallengeResponse = AuthChallengeResponse.from_dict(auth_challenge.to_dict())
             
             return web.json_response(auth_challenge_response.to_dict())
         except Exception as e:
@@ -39,7 +40,7 @@ class AuthController:
                 auth_verify_request.challenge,
                 auth_verify_request.signature)
             
-            auth_verify_response: AuthVerifyResponse = AuthVerifyResponse(**auth_verify)
+            auth_verify_response: AuthVerifyResponse = AuthVerifyResponse.from_dict(auth_verify.to_dict())
             
             return web.json_response(auth_verify_response.to_dict())
         except ValueError as e:

@@ -1,7 +1,9 @@
-from freedomserver.context.auth.auth_repository import AuthRepository
+from redis import Redis
+
 from freedomserver.context.auth.error.challenge_not_expired_error import ChallengeNotExpiredError
 from freedomserver.context.auth.error.token_not_found_error import TokenNotFoundError
-from redis import Redis
+from freedomserver.context.auth.repository.auth_repository import AuthRepository
+
 
 class AuthRepositoryImpl(AuthRepository):
     

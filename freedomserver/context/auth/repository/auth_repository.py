@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-from freedomlib.key.key import Key
-
 class AuthRepository(ABC):
 
     @abstractmethod
@@ -26,13 +24,5 @@ class AuthRepository(ABC):
 
     @abstractmethod
     def delete_token(self, aci: str, device_id: str) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def store_ed25519_key(self, ed25519_key: str) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_ed25519_key(self, aci: str) -> Key:
         raise NotImplementedError()
         

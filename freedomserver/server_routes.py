@@ -2,17 +2,16 @@ import redis
 
 from aiohttp.web import Application
 
-from freedomlib.account.account_repository import AccountRepository
-from freedomlib.key.key_repository import KeyRepository
-
 from freedomserver.configuration.server_keys import ServerKeys
 from freedomserver.context.account.account_cache import AccountCache
-from freedomserver.context.account.account_repository_impl import AccountRepositoryImpl
 from freedomserver.context.account.account_routes import AccountRoutes
-from freedomserver.context.auth.auth_repository import AuthRepository
-from freedomserver.context.auth.auth_repository_impl import AuthRepositoryImpl
+from freedomserver.context.account.repository.account_repository import AccountRepository
+from freedomserver.context.account.repository.account_repository_impl import AccountRepositoryImpl
 from freedomserver.context.auth.auth_routes import AuthRoutes
+from freedomserver.context.auth.repository.auth_repository import AuthRepository
+from freedomserver.context.auth.repository.auth_repository_impl import AuthRepositoryImpl
 from freedomserver.context.contact.contact_routes import ContactRoutes
+from freedomserver.context.key.repository.key_repository import KeyRepository
 from freedomserver.context.key.repository.key_repository_impl import KeyRepositoryImpl
 from freedomserver.context.key.key_routes import KeyRoutes
 from freedomserver.context.message.message_repository import MessageRepository
@@ -47,10 +46,10 @@ class ServerRoutes:
         message_repository: MessageRepository = MessageRepositoryImpl(redis_connection)
         
         app.add_routes(AccountRoutes.create(
+            mail_sender,
             account_repository,
             account_cache,
-            key_repository,
-            mail_sender))
+            key_repository))
         app.add_routes(KeyRoutes.create(
             key_repository))
         app.add_routes(InfoRoutes.create(
@@ -60,6 +59,7 @@ class ServerRoutes:
             account_repository,
             key_repository))
         app.add_routes(MessageRoutes.create(
+            server_keys,
             message_repository,
             auth_repository,
             key_repository))

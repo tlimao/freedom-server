@@ -12,7 +12,7 @@ async def run(argv):
 
     parser.add_argument('--config', '-c', type=str, help="Path to config file")
     parser.add_argument('--debug', '-d', type=str, help="True or False", default=False)
-    parser.add_argument('--command', type=str, help="Comandas:\ngenerateServerKeys", default=None)
+    parser.add_argument('--command', type=str, help="Commands:\ngenerateServerKeys", default=None)
     
     options: argparse.Namespace = parser.parse_args(argv)
     

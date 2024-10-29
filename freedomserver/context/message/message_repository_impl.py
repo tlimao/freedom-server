@@ -1,7 +1,9 @@
-from freedomserver.context.message.message_repository import MessageRepository
-from freedomlib.message.message import Message
-from redis import Redis
 import json
+from redis import Redis
+
+from freedomlib.message.message import Message
+
+from freedomserver.context.message.message_repository import MessageRepository
 
 class MessageRepositoryImpl(MessageRepository):
     

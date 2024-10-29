@@ -9,7 +9,7 @@ from freedomlib.key.key_box import KeyBox
 from freedomserver.context.key.key_routes import KeyRoutes
 from freedomserver.context.key.repository.key_repository import KeyRepository
 from freedomserver.context.key.repository.key_repository_impl import KeyRepositoryImpl
-from tests.commons import ED25519_KEY, RICKY_SANCHEZ_ACI, X25519_KEY
+from tests.commons import ED25519_PUBLIC_KEY, RICKY_SANCHEZ_ACI, X25519_PUBLIC_KEY
 
 @pytest.fixture
 def fake_redis() -> FakeRedis:
@@ -23,8 +23,8 @@ def key_repository(fake_redis: FakeRedis) -> KeyRepository:
     key_repository.save(KeyBox(
         id="dummy-id",
         aci=RICKY_SANCHEZ_ACI,
-        ed25519_public_key=ED25519_KEY,
-        x25519_public_key=X25519_KEY
+        ed25519_public_key=ED25519_PUBLIC_KEY,
+        x25519_public_key=X25519_PUBLIC_KEY
     ))
     
     return key_repository
@@ -44,7 +44,7 @@ async def test_get_account_key(
         key_box: KeyBox = KeyBox(**response)
         
         assert key_box.aci == RICKY_SANCHEZ_ACI 
-        assert key_box.ed25519_public_key == ED25519_KEY
-        assert key_box.x25519_public_key == X25519_KEY
+        assert key_box.ed25519_public_key == ED25519_PUBLIC_KEY
+        assert key_box.x25519_public_key == X25519_PUBLIC_KEY
         assert isinstance(key_box.load_signing_key(), Ed25519PublicKey)
         assert isinstance(key_box.load_exchange_key(), X25519PublicKey)

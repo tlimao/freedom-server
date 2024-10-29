@@ -18,7 +18,7 @@ from freedomserver.context.key.repository.key_repository import KeyRepository
 from freedomserver.context.key.repository.key_repository_impl import KeyRepositoryImpl
 from freedomserver.context.utils.generate_ids import generate_uuid7_str
 from freedomserver.context.utils.mail_sender import MailSender
-from tests.commons import ED25519_KEY, MORTY_EMAIL, MORTY_NICK, MORTY_PHONE, MORTY_PIN_HASH, RICKY_SANCHEZ_ACI, RICKY_SANCHEZ_EMAIL, RICKY_SANCHEZ_NICK, RICKY_SANCHEZ_PHONE, RICKY_SANCHEZ_PIN_HASH, X25519_KEY
+from tests.commons import ED25519_PUBLIC_KEY, MORTY_EMAIL, MORTY_NICK, MORTY_PHONE, MORTY_PIN_HASH, RICKY_SANCHEZ_ACI, RICKY_SANCHEZ_EMAIL, RICKY_SANCHEZ_NICK, RICKY_SANCHEZ_PHONE, RICKY_SANCHEZ_PIN_HASH, X25519_PUBLIC_KEY
 
 @pytest.fixture
 def fake_redis() -> FakeRedis:
@@ -211,8 +211,8 @@ async def test_create_new_account_sucess(
             "nick": MORTY_NICK,
             "email": MORTY_EMAIL,
             "phonenumber": MORTY_PHONE,
-            "ed25519_public_key": ED25519_KEY,
-            "x25519_public_key": X25519_KEY,
+            "ed25519_public_key": ED25519_PUBLIC_KEY,
+            "x25519_public_key": X25519_PUBLIC_KEY,
             "discoverable": True,
             "pin_hash": MORTY_PIN_HASH
         }
@@ -224,8 +224,8 @@ async def test_create_new_account_sucess(
         create_account_response: CreateAccountResponse = CreateAccountResponse.from_dict(response)
         
         assert create_account_response.account_data.discoverable == True
-        assert create_account_response.account_data.ed25519_public_key == ED25519_KEY
-        assert create_account_response.account_data.x25519_public_key == X25519_KEY
+        assert create_account_response.account_data.ed25519_public_key == ED25519_PUBLIC_KEY
+        assert create_account_response.account_data.x25519_public_key == X25519_PUBLIC_KEY
         assert create_account_response.account_data.email == MORTY_EMAIL
         assert create_account_response.account_data.phonenumber == MORTY_PHONE
     
@@ -260,8 +260,8 @@ async def test_create_existent_account_success(
             "nick": RICKY_SANCHEZ_NICK,
             "email": RICKY_SANCHEZ_EMAIL,
             "phonenumber": RICKY_SANCHEZ_PHONE,
-            "ed25519_public_key": ED25519_KEY,
-            "x25519_public_key": X25519_KEY,
+            "ed25519_public_key": ED25519_PUBLIC_KEY,
+            "x25519_public_key": X25519_PUBLIC_KEY,
             "discoverable": True,
             "pin_hash": RICKY_SANCHEZ_PIN_HASH
         }
@@ -273,8 +273,8 @@ async def test_create_existent_account_success(
         create_account_response: CreateAccountResponse = CreateAccountResponse.from_dict(response)
         
         assert create_account_response.account_data.discoverable == True
-        assert create_account_response.account_data.ed25519_public_key == ED25519_KEY
-        assert create_account_response.account_data.x25519_public_key == X25519_KEY
+        assert create_account_response.account_data.ed25519_public_key == ED25519_PUBLIC_KEY
+        assert create_account_response.account_data.x25519_public_key == X25519_PUBLIC_KEY
         assert create_account_response.account_data.email == RICKY_SANCHEZ_EMAIL
         assert create_account_response.account_data.phonenumber == RICKY_SANCHEZ_PHONE 
 
@@ -309,8 +309,8 @@ async def test_create_existent_account_failure_invalid_pin(
             "nick": RICKY_SANCHEZ_NICK,
             "email": RICKY_SANCHEZ_EMAIL,
             "phonenumber": RICKY_SANCHEZ_PHONE,
-            "ed25519_public_key": ED25519_KEY,
-            "x25519_public_key": X25519_KEY,
+            "ed25519_public_key": ED25519_PUBLIC_KEY,
+            "x25519_public_key": X25519_PUBLIC_KEY,
             "discoverable": True,
             "pin_hash": "invalid_pin_hash"
         }

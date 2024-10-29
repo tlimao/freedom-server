@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 
+from freedomlib.utils.serializable import Serializable
 
 @dataclass
-class AuthVerifyRequest:
+class AuthVerifyRequest(Serializable):
     
     request_id: str
     aci: str
@@ -19,3 +20,6 @@ class AuthVerifyRequest:
             challenge=data.get("challenge"),
             signature=data.get("signature")
         )
+
+    def to_dict(self) -> dict:
+        return self.__dict__

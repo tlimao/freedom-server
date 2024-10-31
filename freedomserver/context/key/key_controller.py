@@ -21,4 +21,4 @@ class KeyController:
             return web.json_response(key_box.to_dict())
         except KeyNotFoundError as e:
             logging.error(e)
-            return web.Response(body=str(e), status=HTTPStatus.NOT_FOUND)
+            raise web.HTTPNotFound(reason=str(e))

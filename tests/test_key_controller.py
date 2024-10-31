@@ -48,3 +48,18 @@ async def test_get_account_key(
         assert key_box.x25519_public_key == X25519_PUBLIC_KEY
         assert isinstance(key_box.load_signing_key(), Ed25519PublicKey)
         assert isinstance(key_box.load_exchange_key(), X25519PublicKey)
+
+async def test_get_invalid_account_key(
+    aiohttp_client,
+    key_repository: KeyRepository):
+    
+    app = web.Application()
+    app.add_routes(KeyRoutes.create(key_repository=key_repository))
+    
+    client = await aiohttp_client(app)
+        
+    async with client.get('/key/invalid_account_aci') as resp:
+        assert resp.status == 404
+        response = await resp.text()
+        
+        assert response == "404: Key Not Found"

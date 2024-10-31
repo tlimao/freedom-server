@@ -28,7 +28,7 @@ class AuthController:
             return web.json_response(auth_challenge_response.to_dict())
         except Exception as e:
             logging.error(e)
-            return web.HTTPBadRequest(reason="Invalid Request")
+            raise web.HTTPBadRequest(reason="Invalid Request")
 
     async def verify(self, request: web.Request) -> web.Response:
         try:
@@ -43,5 +43,5 @@ class AuthController:
             auth_verify_response: AuthVerifyResponse = AuthVerifyResponse.from_dict(auth_verify.to_dict())
             
             return web.json_response(auth_verify_response.to_dict())
-        except ValueError as e:
-            return web.HTTPUnauthorized(reason=str(e))
+        except Exception as e:
+            raise web.HTTPUnauthorized(reason=str(e))

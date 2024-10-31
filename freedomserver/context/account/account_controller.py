@@ -39,7 +39,7 @@ class AccountController:
         
         except AccountRegistrationError as e:
             logging.error(e)
-            return web.Response(status=500, body=str(e))
+            raise web.HTTPBadRequest(reason=str(e))
 
     async def verify(self, request: web.Request) -> web.Response:
         try:
@@ -60,7 +60,7 @@ class AccountController:
         
         except AccountVerificationError as e:
             logging.error(e)
-            return web.Response(status=500, body=str(e))
+            raise web.HTTPBadRequest(reason=str(e))
 
     async def create(self, request: web.Request) -> web.Response:
         try:
@@ -79,7 +79,7 @@ class AccountController:
             
         except AccountNotCreatedError as e:
             logging.error(e)
-            return web.Response(status=500, body=str(e))
+            raise web.HTTPBadRequest(reason=str(e))
 
     async def get_profile(self, request: web.Request) -> web.Response:
         try:
@@ -91,7 +91,7 @@ class AccountController:
             
         except AccountNotFoundError as e:
             logging.error(e)
-            return web.Response(status=500, body=str(e))
+            raise web.HTTPNotFound(reason=str(e))
 
     async def update_profile(self, request: web.Request) -> web.Response:
         try:
@@ -109,4 +109,4 @@ class AccountController:
             
         except AccountUpdateError as e:
             logging.error(e)
-            return web.Response(status=500, body=str(e))
+            raise web.HTTPBadRequest(reason=str(e))

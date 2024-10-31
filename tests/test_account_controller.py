@@ -175,10 +175,10 @@ async def test_register_account_failed(
     }
     
     async with client.post('/account/register', json=registration_request_dict) as resp:
-        assert resp.status == 500
+        assert resp.status == 400
         response = await resp.text()
         
-        assert response == "Account Registration Failed"
+        assert response == "400: Account Registration Failed"
         
 async def test_create_new_account_sucess(
     aiohttp_client,
@@ -317,7 +317,7 @@ async def test_create_existent_account_failure_invalid_pin(
     }
     
     async with client.post('/account/create', json=create_account_request_dict) as resp:
-        assert resp.status == 500
+        assert resp.status == 400
         response = await resp.text()
         
-        assert response == "Incorrect PIN!"
+        assert response == "400: Incorrect PIN!"

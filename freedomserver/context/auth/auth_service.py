@@ -70,8 +70,7 @@ class AuthService:
 
             return True
         except Exception as e:
-            # Se a verificação falhar, lançar uma exceção personalizada
-            raise ChallengeSignatureNotValidError("A assinatura do desafio não é válida") from e
+            raise ChallengeSignatureNotValidError("Challenge verification failed!")
 
     def verify_token(self, aci: str, device_id: str, token: str) -> bool:
         stored_token: bytes = self._auth_repository.get_token(aci, device_id)

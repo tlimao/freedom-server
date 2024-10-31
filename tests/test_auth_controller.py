@@ -85,6 +85,7 @@ async def test_account_request_verify(
     key_repository.save(key_box)
 
     app = web.Application()
+
     app.add_routes(AuthRoutes.create(
         key_repository=key_repository,
         auth_repository=auth_repository,
@@ -120,3 +121,54 @@ async def test_account_request_verify(
         response = await resp.json()
         
         assert response.get('token') != ''
+
+async def test_account_request_invalid_verify(
+    aiohttp_client,
+    auth_repository: AuthRepository,
+    key_repository: KeyRepository,
+    server_keys: ServerKeys) -> None:
+    
+    key_box: KeyBox = KeyBox(
+        aci=RICKY_SANCHEZ_ACI,
+        id="ricky_sanchez_key_id",
+        ed25519_public_key=ED25519_PUBLIC_KEY,
+        x25519_public_key=X25519_PUBLIC_KEY
+    )
+    
+    key_repository.save(key_box)
+
+    app = web.Application()
+
+    app.add_routes(AuthRoutes.create(
+        key_repository=key_repository,
+        auth_repository=auth_repository,
+        server_keys=server_keys
+    ))
+    
+    client = await aiohttp_client(app)
+    
+    challenge_request_dict: dict = {
+        "aci": RICKY_SANCHEZ_ACI,
+        "device_id": "1"
+    }
+    
+    async with client.post('/auth/challenge', json=challenge_request_dict) as resp:
+        assert resp.status == 200
+        response = await resp.json()
+        
+        auth_challenge_response: AuthChallengeResponse = AuthChallengeResponse.from_dict(response)
+        
+    auth_verify_request: AuthVerifyRequest = AuthVerifyRequest(
+        aci=RICKY_SANCHEZ_ACI,
+        challenge=auth_challenge_response.challenge,
+        device_id="1",
+        request_id=auth_challenge_response.request_id,
+        signature="invalid_signature"
+    )
+        
+    async with client.post('/auth/verify', json=auth_verify_request.to_dict()) as resp:
+        assert resp.status == 401
+
+        response = await resp.text()
+        
+        assert response == '401: Challenge verification failed!'

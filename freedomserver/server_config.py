@@ -1,6 +1,6 @@
 import logging
 
-from yaml import safe_load
+import yaml
 
 from freedomserver.configuration.redis_config import RedisConfig
 from freedomserver.configuration.server_info_config import ServerInfoConfig
@@ -20,7 +20,7 @@ class ServerConfig:
     def _load_from_file(self, filename: str) -> None:
         try:
             with open(filename) as f:
-                config_dict: dict = safe_load(f.read())
+                config_dict: dict = yaml.safe_load(f.read())
                 
                 self._redis_config: RedisConfig = RedisConfig(**config_dict.get("redis"))
                 self._server_info: ServerInfoConfig = ServerInfoConfig(**config_dict.get("server_info"))

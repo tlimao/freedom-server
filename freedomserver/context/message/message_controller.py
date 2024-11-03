@@ -1,66 +1,37 @@
-import base64
-import json
 import logging
-from aiohttp import WSMsgType, web
-from http import HTTPStatus
-from freedomserver.context.connections.ws_connection_manager import WsConnectionManager
+
+from aiohttp import web
+from freedomserver.context.connections.error.connection_error import AuthFailed
+from freedomserver.context.connections.ws_connection_manager import ConnectionId, WsConnectionManager
 from freedomserver.context.message.message_service import MessageService
 from freedomserver.context.auth.auth_service import AuthService
-routes = web.RouteTableDef()
 
 class MessageController:
 
     def __init__(self, message_service: MessageService, auth_service: AuthService):
         self._message_service: MessageService = message_service
         self._auth_service: AuthService = auth_service
-        self._connection_manager: WsConnectionManager = WsConnectionManager()
+        self._connection_manager: WsConnectionManager = WsConnectionManager(self._auth_service)
         self._logger = logging.getLogger(__name__)
 
     async def message_handler(self, request: web.Request) -> web.WebSocketResponse:
         ws = web.WebSocketResponse()
         await ws.prepare(request)
         
-        aci, device_id = await self._authenticate(ws)
-        if not aci or not device_id:
-            return ws
-
-        self._logger.info(f"Client connected: {aci} - {device_id}")
-        
-        self._connection_manager.add_client(aci, device_id, ws)
-        
         try:
-            await self._message_service.handle_messages(ws, aci, device_id)
-        finally:
-            self._connection_manager.remove_client(aci, device_id)
-            self._logger.info(f"Client disconnected: {aci} - {device_id}")
+            connection_id: ConnectionId = await self._connection_manager.authenticate(ws)
+            
+            self._logger.info(f"Client connected: {str(connection_id)}")
+            
+            self._connection_manager.add_client(connection_id, ws)
+            
+            try:
+                await self._message_service.handle_messages(ws, connection_id)
+            finally:
+                self._connection_manager.remove_client(connection_id)
+                self._logger.info(f"Client disconnected: {str(connection_id)}")
+            
+        except AuthFailed as e:
+            logging.error(str(e))
         
         return ws
-    
-    async def _authenticate(self, ws: web.WebSocketResponse):
-        await ws.send_str("AUTHENTICATE")
-        
-        try:
-            msg = await ws.receive_str()
-            auth_data = json.loads(msg)
-            
-            aci = auth_data.get('aci')
-            device_id = auth_data.get('device_id')
-            token = auth_data.get('token')
-            
-            if not aci or not device_id or not token:
-                await ws.close(code=WSMsgType.CLOSE, message="Dados de autenticação inválidos")
-                return None, None
-            
-            if not self._auth_service.verify_token(aci, device_id, token):
-                await ws.close(code=WSMsgType.CLOSE, message="Autenticação falhou")
-                return None, None
-            
-            return aci, device_id
-        except json.JSONDecodeError:
-            self._logger.error("Erro ao decodificar JSON de autenticação")
-            await ws.close(code=WSMsgType.CLOSE, message="Formato de autenticação inválido")
-            return None, None
-        except Exception as e:
-            self._logger.error(f"Erro durante a autenticação: {str(e)}")
-            await ws.close(code=WSMsgType.CLOSE, message="Erro de autenticação")
-            return None, None

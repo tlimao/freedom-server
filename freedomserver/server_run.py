@@ -4,6 +4,7 @@ import argparse
 from aiohttp.web import Application
 
 from freedomserver.commands.server_keys import generate_server_keys
+from freedomserver.context.utils.banner import Banner
 from freedomserver.server_routes import ServerRoutes
 from freedomserver.server_config import ServerConfig
 
@@ -31,5 +32,7 @@ async def run(argv):
     app: Application = Application()
     
     ServerRoutes.setup_routes(app, config)
+    
+    Banner.show(config.server_info)
     
     return app

@@ -73,9 +73,9 @@ class AuthService:
             raise ChallengeSignatureNotValidError("Challenge verification failed!")
 
     def verify_token(self, aci: str, device_id: str, token: str) -> bool:
-        stored_token: bytes = self._auth_repository.get_token(aci, device_id)
+        stored_token: str = self._auth_repository.get_token(aci, device_id)
         
         if stored_token:
-            return stored_token.decode("utf-8") == token
+            return stored_token == token
         
         raise TokenNotFoundError("Token not found")

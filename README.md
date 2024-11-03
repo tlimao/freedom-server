@@ -17,5 +17,5 @@ python -m pip install -r requirements.txt
 ## Run local
 
 ```
-python -m aiohttp.web -H 0.0.0.0 -P 8080 freedomserver.server_run:run -c config/server.local.yml
+./scripts/start.local.sh
 ```

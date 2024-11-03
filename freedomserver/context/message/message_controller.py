@@ -26,7 +26,7 @@ class MessageController:
             self._connection_manager.add_client(connection_id, ws)
             
             try:
-                await self._message_service.handle_messages(ws, connection_id)
+                await self._message_service.handle_messages(ws)
             finally:
                 self._connection_manager.remove_client(connection_id)
                 self._logger.info(f"Client disconnected: {str(connection_id)}")

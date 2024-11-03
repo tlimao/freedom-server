@@ -19,7 +19,7 @@ class ContactController:
         try:
             fetch_contact_request: FetchContactsRequest = FetchContactsRequest.from_dict(await request.json())
             
-            contacts: List[Contact] = self._contact_service.get_contacts(fetch_contact_request.phonenumbers)
+            contacts: List[Contact] = self._contact_service.get_contacts(fetch_contact_request.phonenumbers, fetch_contact_request.acis)
             
             fetch_contact_response: FetchContactsResponse = FetchContactsResponse(contacts)
             

@@ -6,9 +6,8 @@ from typing import List
 class FetchContactsRequest:
     
     phonenumbers: List[str]
+    acis: List[str]
 
     @classmethod
     def from_dict(cls, data: dict) -> 'FetchContactsRequest':
-        return FetchContactsRequest(
-            phonenumbers=data.get("phonenumbers")
-        )
+        return FetchContactsRequest(**data)

@@ -26,7 +26,7 @@ async def run(argv):
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
-        
+    
     config: ServerConfig = ServerConfig(filename=options.config)
     
     app: Application = Application()

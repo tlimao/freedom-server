@@ -1,6 +1,6 @@
 server_info:
   name: freedom-server
-  version: 3.0.0
+  version: *
   environment: local
 
 server_keys:

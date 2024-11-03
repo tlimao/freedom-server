@@ -3,7 +3,7 @@ server_info:
   version: 3.0.0
   environment: local
 
-server_keys:
+server_keys: # Don't use this values in production environment
   public_key: |
     -----BEGIN PUBLIC KEY-----
     MCowBQYDK2VwAyEAoVQWbQbvR1XyCvxxyCPeuVVNGX+3An/HRKJNrzHXblM=
